@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodAppBE.Data;
 
@@ -11,9 +12,11 @@ using MoodAppBE.Data;
 namespace MoodAppBE.Migrations
 {
     [DbContext(typeof(MoodAppDBContext))]
-    partial class MoodAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260911084136_wellness")]
+    partial class wellness
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,33 +287,7 @@ namespace MoodAppBE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("WellnessId");
-
                     b.ToTable("UsersMoods");
-                });
-
-            modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
-                {
-                    b.Property<int>("WellnessId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WellnessId"));
-
-                    b.Property<string>("Activity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Food")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SleepQuality")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("WellnessId");
-
-                    b.ToTable("Wellnesses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -378,12 +355,6 @@ namespace MoodAppBE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MoodAppBE.Models.Wellness", null)
-                        .WithMany("UsersMoods")
-                        .HasForeignKey("WellnessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Mood");
 
                     b.Navigation("User");
@@ -395,11 +366,6 @@ namespace MoodAppBE.Migrations
                 });
 
             modelBuilder.Entity("MoodAppBE.Models.User", b =>
-                {
-                    b.Navigation("UsersMoods");
-                });
-
-            modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
                 {
                     b.Navigation("UsersMoods");
                 });

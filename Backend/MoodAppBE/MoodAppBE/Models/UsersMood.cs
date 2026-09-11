@@ -10,6 +10,9 @@
         public int MoodId { get; set; }
         public Mood Mood { get; set; }
 
+        public int WellnessId { get; set; }
+        public Wellness Wellness;
+
         public DateTime CreationDate { get; set; }
     }
 }

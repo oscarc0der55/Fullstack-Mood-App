@@ -13,6 +13,7 @@ namespace MoodAppBE.Data
         }
 
         public DbSet<Mood> Moods { get; set; }
+        public DbSet<Wellness> Wellnesses { get; set; }
         public DbSet<UsersMood> UsersMoods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
