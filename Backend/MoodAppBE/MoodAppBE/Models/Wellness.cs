@@ -7,6 +7,6 @@
         public string Food { get; set; }
         public string? SleepQuality { get; set; }
 
-        public List<UsersMood> UsersMoods { get; set; }
+        public List<UsersWellness> UsersWellness { get; set; }
     }
 }

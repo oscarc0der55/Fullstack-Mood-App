@@ -7,5 +7,6 @@ namespace MoodAppBE.Models
     {
         public string? Name { get; set; }
         public List<UsersMood> UsersMoods { get; set; }
+        public List<UsersWellness> UsersWellnesses { get; set; }
     }
 }
