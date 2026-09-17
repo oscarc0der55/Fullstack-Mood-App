@@ -6,7 +6,7 @@ using MoodAppBE.DTO.Wellness;
 
 namespace MoodAppBE.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controllers]")]
     [ApiController]
     public class WellnessController : ControllerBase
     {

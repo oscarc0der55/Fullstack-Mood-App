@@ -6,7 +6,7 @@ using MoodAppBE.DTO.Mood;
 
 namespace MoodAppBE.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controllers]")]
     [ApiController]
     public class MoodController : ControllerBase
     {
