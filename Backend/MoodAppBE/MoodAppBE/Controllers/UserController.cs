@@ -35,7 +35,7 @@ namespace MoodAppBE.Controllers
         //[HttpGet("all")]
         //public IActionResult GetAllUsers()
         //{
-            
+
         //}
     }
 }

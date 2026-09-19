@@ -39,18 +39,18 @@ namespace MoodAppBE.Repository
             context.Moods.Update(mood);
             var result = await context.SaveChangesAsync();
 
-            if(result > 0)
+            if (result > 0)
             {
                 return true;
             }
             return false;
         }
-       
+
         public async Task<bool> DeleteMoodAsync(int moodId)
         {
             var rowsAffected = await context.Moods.Where(m => m.MoodId == moodId).ExecuteDeleteAsync();
 
-            if(rowsAffected > 0)
+            if (rowsAffected > 0)
             {
                 return true;
             }

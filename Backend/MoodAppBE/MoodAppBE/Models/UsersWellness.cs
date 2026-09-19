@@ -7,7 +7,7 @@
         public User User { get; set; }
 
         public int WellnessId { get; set; }
-        public Wellness Wellness;
+        public Wellness Wellness { get; set; }
 
         public DateTime CreationDate { get; set; }
 

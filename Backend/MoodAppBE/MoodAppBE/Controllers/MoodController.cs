@@ -11,7 +11,7 @@ namespace MoodAppBE.Controllers
     public class MoodController : ControllerBase
     {
         private readonly IMoodService moodService;
-        public MoodController (IMoodService _moodService)
+        public MoodController(IMoodService _moodService)
         {
             moodService = _moodService;
         }
@@ -31,7 +31,7 @@ namespace MoodAppBE.Controllers
         public async Task<ActionResult<MoodDTO>> GetById(int moodId)
         {
             var mood = await moodService.GetMoodByIdAsync(moodId);
-            if(mood == null)
+            if (mood == null)
             {
                 return NotFound();
             }
@@ -69,5 +69,7 @@ namespace MoodAppBE.Controllers
             }
             return NoContent();
         }
+
+
     }
 }

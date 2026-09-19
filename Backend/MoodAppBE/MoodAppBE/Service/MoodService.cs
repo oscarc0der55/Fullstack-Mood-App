@@ -31,7 +31,7 @@ namespace MoodAppBE.Service
         public async Task<MoodDTO?> GetMoodByIdAsync(int moodId)
         {
             var mood = await moodRepository.GetMoodByIdAsync(moodId);
-            if(mood == null)
+            if (mood == null)
             {
                 return null;
             }
@@ -48,7 +48,7 @@ namespace MoodAppBE.Service
 
         public async Task<MoodDTO> CreateMoodAsync(CreateMoodDTO newMood)
         {
-            
+
             var mood = new Mood
             {
                 Status = newMood.Status,
