@@ -6,7 +6,7 @@ using MoodAppBE.DTO.Wellness;
 
 namespace MoodAppBE.Controllers
 {
-    [Route("api/[controllers]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class WellnessController : ControllerBase
     {
@@ -25,6 +25,7 @@ namespace MoodAppBE.Controllers
             return Ok(wellness);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("{wellnessId:int}")]
         public async Task<ActionResult<WellnessDTO>> GetById(int wellnessId)

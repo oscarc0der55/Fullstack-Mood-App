@@ -6,7 +6,7 @@ using MoodAppBE.DTO.Mood;
 
 namespace MoodAppBE.Controllers
 {
-    [Route("api/[controllers]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MoodController : ControllerBase
     {
@@ -25,6 +25,7 @@ namespace MoodAppBE.Controllers
             return Ok(moods);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("{moodId:int}")]
         public async Task<ActionResult<MoodDTO>> GetById(int moodId)

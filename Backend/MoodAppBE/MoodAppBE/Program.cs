@@ -51,7 +51,7 @@ namespace MoodAppBE
             {
                 options.AddPolicy("Frontend", policy =>
                 {
-                    policy.WithOrigins(builder.Configuration["Frontend_Domain"])
+                    policy.WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
