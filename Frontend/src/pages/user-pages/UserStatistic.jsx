@@ -1,0 +1,1 @@
+//Where everything is rendered for the user aka mood and wellness

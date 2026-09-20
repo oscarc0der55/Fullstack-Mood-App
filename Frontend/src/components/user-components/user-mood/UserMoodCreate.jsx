@@ -1,5 +1,5 @@
 import {useState, useContext} from 'react';
-import {MoodContext} from '../../../context/user-context/MoodContext';
+import {MoodContext} from '../../../context/MoodContext';
 import {createMood} from '../../../connection/mood-connection/MoodConnection';
 
 export default function UserMoodCreate() {

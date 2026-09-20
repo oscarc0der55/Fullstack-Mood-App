@@ -1,7 +1,6 @@
-import {useState, useEffect, createContext} from 'react';
+import {useState, useEffect} from 'react';
 import {getMoods} from '../../../connection/mood-connection/MoodConnection';
-
-export const MoodContext = createContext();
+import {MoodContextObject} from './MoodContextObject';
 
 export function MoodProvider({children}) {
     const [moods, setMoods] = useState([]);
@@ -20,8 +19,8 @@ export function MoodProvider({children}) {
     }, []);
 
     return (
-        <MoodContext.Provider value={{ moods, setMoods }}>
+        <MoodContextObject.Provider value={{ moods, setMoods }}>
             {children}
-        </MoodContext.Provider>
+        </MoodContextObject.Provider>
     );
 }

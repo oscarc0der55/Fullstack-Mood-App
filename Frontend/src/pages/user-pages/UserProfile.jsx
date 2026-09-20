@@ -1,0 +1,1 @@
+//Profile page where they can check and edit their profile and log out

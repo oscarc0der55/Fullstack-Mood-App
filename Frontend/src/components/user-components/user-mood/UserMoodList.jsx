@@ -1,5 +1,5 @@
 import {deleteMood} from "../../../connection/mood-connection/MoodConnection";
-import MoodContext from "../../../context/user-context/MoodContext";
+import MoodContext from "../../../context/MoodContext";
 import {useContext} from "react";
 
 export default function UserMoodList(){
