@@ -14,13 +14,14 @@ namespace MoodAppBE.Service
             using (var scope = app.Services.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
                 var context = scope.ServiceProvider.GetRequiredService<MoodAppDBContext>();
 
-                await SeedAdminUser(userManager, context);
-                await SeedUsers(userManager ,context);
+                await SeedAdminUser(userManager, roleManager, context);
+                await SeedUsers(userManager, roleManager, context);
             }
         }
-        private static async Task SeedAdminUser(UserManager<User> userManager, MoodAppDBContext context)
+        private static async Task SeedAdminUser(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, MoodAppDBContext context)
         {
             var admin = await userManager.FindByEmailAsync("admin@mood.se");
 
@@ -41,24 +42,20 @@ namespace MoodAppBE.Service
                 await userManager.UpdateSecurityStampAsync(newAdmin);
 
                 // Create the Admin role if it doesn't exist
-                var adminRoleExists = await userManager.AddToRoleAsync(newAdmin, "Admin");
+                var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+                if (!adminRoleExists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole<int> { Name = "Admin" });
+                }
+
+                // Now assign the user to the role
+                await userManager.AddToRoleAsync(newAdmin, "Admin");
 
                 context.ChangeTracker.Clear();
-                var existingSeedAdmin = await context.Users.FirstAsync(u => u.Email == "admin@mood.se");
-
-                var adminProfile = new User
-                {
-                    Id = existingSeedAdmin.Id,
-                    UserName = "admin@mood.se",
-                    Email = "admin@mood.se",
-                    EmailConfirmed = true
-                };
-
-                await context.Users.AddAsync(adminProfile);
             }
         }
 
-        private static async Task SeedUsers(UserManager<User> userManager, MoodAppDBContext context)
+        private static async Task SeedUsers(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, MoodAppDBContext context)
         {
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.SeedPos == 2);
             var user2 = await context.Users.FirstOrDefaultAsync(u => u.SeedPos == 3);
@@ -69,11 +66,17 @@ namespace MoodAppBE.Service
             if (user1 == null)
             {
                 user1 = new User { UserName = seedEmail1, Email = seedEmail1, SeedPos = 2 };
-                var result = userManager.CreateAsync(user1, "Password123!");
+                var result = await userManager.CreateAsync(user1, "Password123!");
 
                 if (result == null)
                 {
                     throw new InvalidOperationException("Failed to create user");
+                }
+
+                var userRoleExists = await roleManager.RoleExistsAsync("User");
+                if (!userRoleExists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole<int> { Name = "User" });
                 }
                 await userManager.AddToRoleAsync(user1, "User");
             }
@@ -91,7 +94,7 @@ namespace MoodAppBE.Service
             if (user2 == null)
             {
                 user2 = new User { UserName = seedEmail2, Email = seedEmail2, SeedPos = 3 };
-                var result = userManager.CreateAsync(user2, "Password123!");
+                var result = await userManager.CreateAsync(user2, "Password123!");
 
                 if (result == null)
                 {
@@ -120,7 +123,7 @@ namespace MoodAppBE.Service
             await SeedUserWellness(context);
         }
 
-        private static async Task <List<Mood>> SeedMood(MoodAppDBContext context)
+        private static async Task SeedMood(MoodAppDBContext context)
         {
             var templates = new List<Mood>()
             {
@@ -176,20 +179,20 @@ namespace MoodAppBE.Service
                 }
             };
 
-            await context.SaveChangesAsync();
-            var createdMoods = new List<Mood>();
-            foreach (var t in templates)
+            // Add moods to the context
+            foreach (var mood in templates)
             {
-                var m = await context.Moods.FirstOrDefaultAsync(m => m.MoodId == t.MoodId);
-                if (m != null)
+                var exists = await context.Moods.FirstOrDefaultAsync(m => m.Status == mood.Status && m.Troubles == mood.Troubles);
+                if (exists == null)
                 {
-                    createdMoods.Add(m);
+                    await context.Moods.AddAsync(mood);
                 }
             }
-            return createdMoods;
+
+            await context.SaveChangesAsync();
         }
 
-        private static async Task <List<Wellness>> SeedWellness(MoodAppDBContext context)
+        private static async Task<List<Wellness>> SeedWellness(MoodAppDBContext context)
         {
             var templates = new List<Wellness>()
             {
@@ -251,6 +254,13 @@ namespace MoodAppBE.Service
             var test2 = await context.Users.FirstOrDefaultAsync(t => t.Email == "test2@gmail.com");
 
             var moods = await context.Moods.ToListAsync();
+
+            // Validate that we have enough moods seeded
+            if (moods.Count < 10)
+            {
+                throw new InvalidOperationException($"Expected at least 10 moods to be seeded, but found only {moods.Count}. Please ensure SeedMood() has been called successfully.");
+            }
+
             var templates = new List<UsersMood>()
             {
                 new UsersMood
@@ -265,49 +275,49 @@ namespace MoodAppBE.Service
                     MoodId = moods[1].MoodId,
                     CreationDate = new DateTime(2026, 9, 8)
                 },
-                  new UsersMood
+                new UsersMood
                 {
                     Id = user1.Id,
                     MoodId = moods[2].MoodId,
                     CreationDate = new DateTime(2026, 9, 9)
                 },
-                   new UsersMood
+                new UsersMood
                 {
                     Id = user1.Id,
                     MoodId = moods[3].MoodId,
                     CreationDate = new DateTime(2026, 9, 10)
                 },
-                    new UsersMood
+                new UsersMood
                 {
-                    Id = user1.Id,
-                    MoodId = moods[4].MoodId,
-                    CreationDate = new DateTime(2026, 9, 11)
+                   Id = user1.Id,
+                   MoodId = moods[4].MoodId,
+                   CreationDate = new DateTime(2026, 9, 11)
                 },
-                    new UsersMood
+                new UsersMood
                 {
                     Id = test2.Id,
                     MoodId = moods[5].MoodId,
                     CreationDate = new DateTime(2026, 9, 7)
                 },
-                 new UsersMood
+                new UsersMood
                 {
                     Id = test2.Id,
                     MoodId = moods[6].MoodId,
                     CreationDate = new DateTime(2026, 9, 8)
                 },
-                  new UsersMood
+                new UsersMood
                 {
                     Id = test2.Id,
                     MoodId = moods[7].MoodId,
                     CreationDate = new DateTime(2026, 9, 9)
                 },
-                   new UsersMood
+                new UsersMood
                 {
                     Id = test2.Id,
                     MoodId = moods[8].MoodId,
                     CreationDate = new DateTime(2026, 9, 10)
                 },
-                    new UsersMood
+                new UsersMood
                 {
                     Id = test2.Id,
                     MoodId = moods[9].MoodId,
@@ -376,7 +386,7 @@ namespace MoodAppBE.Service
                 }
             };
 
-            foreach(var t in templates)
+            foreach (var t in templates)
             {
                 var exists = await context.UsersWellnesses.FirstOrDefaultAsync(u => u.Id == t.Id && u.WellnessId == t.WellnessId && u.CreationDate == t.CreationDate);
                 if (exists != null)

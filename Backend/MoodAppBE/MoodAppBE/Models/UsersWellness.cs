@@ -1,8 +1,11 @@
-﻿namespace MoodAppBE.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MoodAppBE.Models
 {
     public class UsersWellness
     {
         public int UsersWellnessId { get; set; }
+        [ForeignKey("User")]
         public int Id { get; set; }
         public User User { get; set; }
 

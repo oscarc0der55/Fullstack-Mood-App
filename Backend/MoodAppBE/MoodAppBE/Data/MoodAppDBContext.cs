@@ -21,6 +21,11 @@ namespace MoodAppBE.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<UsersMood>()
+                .HasKey(um => um.UsersMoodId);
+
+            modelBuilder.Entity<UsersWellness>().HasKey(uw => uw.UsersWellnessId);
+
             modelBuilder.Entity<IdentityRole<int>>().HasData(
                 new IdentityRole<int>
                 {
