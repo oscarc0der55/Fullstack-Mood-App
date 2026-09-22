@@ -65,7 +65,7 @@ namespace MoodAppBE
 
             app.UseCors("Frontend");
 
-            await app.SeedAdminUser();
+            await app.SeedData();
             app.UseMiddleware<GlobalExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
