@@ -56,8 +56,8 @@ namespace MoodAppBE.Migrations
                         {
                             Id = 1,
                             ConcurrencyStamp = "",
-                            Name = "User1",
-                            NormalizedName = "USER123"
+                            Name = "OriginalUser",
+                            NormalizedName = "OGUSER123"
                         });
                 });
 
@@ -274,11 +274,16 @@ namespace MoodAppBE.Migrations
                     b.Property<int>("MoodId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("UsersMoodId");
 
                     b.HasIndex("Id");
 
                     b.HasIndex("MoodId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UsersMoods");
                 });
@@ -297,12 +302,17 @@ namespace MoodAppBE.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("WellnessId")
                         .HasColumnType("int");
 
                     b.HasKey("UsersWellnessId");
 
                     b.HasIndex("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WellnessId");
 
@@ -387,7 +397,7 @@ namespace MoodAppBE.Migrations
             modelBuilder.Entity("MoodAppBE.Models.UsersMood", b =>
                 {
                     b.HasOne("MoodAppBE.Models.User", "User")
-                        .WithMany("UsersMoods")
+                        .WithMany()
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -398,6 +408,10 @@ namespace MoodAppBE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MoodAppBE.Models.User", null)
+                        .WithMany("UsersMoods")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Mood");
 
                     b.Navigation("User");
@@ -406,10 +420,14 @@ namespace MoodAppBE.Migrations
             modelBuilder.Entity("MoodAppBE.Models.UsersWellness", b =>
                 {
                     b.HasOne("MoodAppBE.Models.User", "User")
-                        .WithMany("UsersWellnesses")
+                        .WithMany()
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MoodAppBE.Models.User", null)
+                        .WithMany("UsersWellnesses")
+                        .HasForeignKey("UserId");
 
                     b.HasOne("MoodAppBE.Models.Wellness", "Wellness")
                         .WithMany("UsersWellness")

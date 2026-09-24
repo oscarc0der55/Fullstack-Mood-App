@@ -214,7 +214,7 @@ namespace MoodAppBE.Service
                     Food = "Hamburger",
                     SleepQuality = ""
                 },
-                 new Wellness
+                new Wellness
                 {
                     Activity = "Gym class",
                     Food = "Salmon",
@@ -228,18 +228,52 @@ namespace MoodAppBE.Service
                 },
                 new Wellness
                 {
-                     Activity = "Studying",
+                    Activity = "Studying",
                     Food = "Soup",
                     SleepQuality = "Bad"
+                },
+                new Wellness
+                {
+                    Activity = "Meditation",
+                    Food = "Salad",
+                    SleepQuality = "Good"
+                },
+                new Wellness
+                {
+                    Activity = "Reading",
+                    Food = "Fish",
+                    SleepQuality = ""
+                },
+                new Wellness
+                {
+                    Activity = "Gaming",
+                    Food = "Pizza",
+                    SleepQuality = "Average"
+                },
+                new Wellness
+                {
+                    Activity = "Walking",
+                    Food = "Fruits",
+                    SleepQuality = "Good"
                 }
             };
+
+            // Add wellnesses to the context
+            foreach (var t in templates)
+            {
+                var exists = await context.Wellnesses.FirstOrDefaultAsync(w => w.Activity == t.Activity && w.Food == t.Food && w.SleepQuality == t.SleepQuality);
+                if (exists == null)
+                {
+                    context.Wellnesses.Add(t);
+                }
+            }
 
             await context.SaveChangesAsync();
 
             var createdWell = new List<Wellness>();
             foreach (var t in templates)
             {
-                var w = await context.Wellnesses.FirstOrDefaultAsync(w => w.WellnessId == t.WellnessId);
+                var w = await context.Wellnesses.FirstOrDefaultAsync(w => w.Activity == t.Activity && w.Food == t.Food && w.SleepQuality == t.SleepQuality);
                 if (w != null)
                 {
                     createdWell.Add(w);
@@ -252,6 +286,11 @@ namespace MoodAppBE.Service
         {
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
             var test2 = await context.Users.FirstOrDefaultAsync(t => t.Email == "test2@gmail.com");
+
+            if (user1 == null || test2 == null)
+            {
+                throw new InvalidOperationException("Required users (user1@gmail.com, test2@gmail.com) were not found. Please ensure SeedUsers() has been called successfully.");
+            }
 
             var moods = await context.Moods.ToListAsync();
 
@@ -329,76 +368,109 @@ namespace MoodAppBE.Service
             {
                 var exists = await context.UsersMoods.FirstOrDefaultAsync(u => u.Id == t.Id && u.MoodId == t.MoodId && u.CreationDate == t.CreationDate);
 
-                if (exists != null)
+                if (exists == null)
                 {
-
-                }
-                else
-                {
-                    await context.UsersMoods.AddAsync(t);
+                    context.UsersMoods.Add(t);
                 }
             }
+
             await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
         }
         private static async Task SeedUserWellness(MoodAppDBContext context)
         {
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
             var test2 = await context.Users.FirstOrDefaultAsync(t => t.Email == "test2@gmail.com");
 
-            var wells = await context.Wellnesses.ToListAsync();
+            if (user1 == null || test2 == null)
+            {
+                throw new InvalidOperationException("Required users (user1@gmail.com, test2@gmail.com) were not found. Please ensure SeedUsers() has been called successfully.");
+            }
+
+            var wellnesses = await context.Wellnesses.ToListAsync();
+
+            // Validate that we have enough wellnesses seeded
+            if (wellnesses.Count < 10)
+            {
+                throw new InvalidOperationException($"Expected at least 10 wellnesses to be seeded, but found only {wellnesses.Count}. Please ensure SeedWellness() has been called successfully.");
+            }
+
             var templates = new List<UsersWellness>()
-                {
-                new UsersWellness
-                {
-                    Id = user1.Id,
-                    WellnessId = wells[0].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 7)
-                },
-                new UsersWellness
-                {
-                    Id = user1.Id,
-                    WellnessId = wells[1].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 8)
-                },
-                new UsersWellness
-                {
-                    Id = user1.Id,
-                    WellnessId = wells[2].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 9)
-                },
-                new UsersWellness
-                {
-                    Id = test2.Id,
-                    WellnessId = wells[3].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 7)
-                },
-                new UsersWellness
-                {
-                    Id = test2.Id,
-                    WellnessId = wells[4].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 8)
-                },
-                new UsersWellness
-                {
-                    Id = test2.Id,
-                    WellnessId = wells[5].WellnessId,
-                    CreationDate = new DateTime(2026, 9, 9)
-                }
-            };
+    {
+        new UsersWellness
+        {
+            Id = user1.Id,
+            WellnessId = wellnesses[0].WellnessId,
+            CreationDate = new DateTime(2026, 9, 7)
+        },
+        new UsersWellness
+        {
+            Id = user1.Id,
+            WellnessId = wellnesses[1].WellnessId,
+            CreationDate = new DateTime(2026, 9, 8)
+        },
+        new UsersWellness
+        {
+            Id = user1.Id,
+            WellnessId = wellnesses[2].WellnessId,
+            CreationDate = new DateTime(2026, 9, 9)
+        },
+        new UsersWellness
+        {
+            Id = user1.Id,
+            WellnessId = wellnesses[3].WellnessId,
+            CreationDate = new DateTime(2026, 9, 10)
+        },
+        new UsersWellness
+        {
+            Id = user1.Id,
+            WellnessId = wellnesses[4].WellnessId,
+            CreationDate = new DateTime(2026, 9, 11)
+        },
+        new UsersWellness
+        {
+            Id = test2.Id,
+            WellnessId = wellnesses[5].WellnessId,
+            CreationDate = new DateTime(2026, 9, 12)
+        },
+        new UsersWellness
+        {
+            Id = test2.Id,
+            WellnessId = wellnesses[6].WellnessId,
+            CreationDate = new DateTime(2026, 9, 13)
+        },
+        new UsersWellness
+        {
+            Id = test2.Id,
+            WellnessId = wellnesses[7].WellnessId,
+            CreationDate = new DateTime(2026, 9, 14)
+        },
+        new UsersWellness
+        {
+            Id = test2.Id,
+            WellnessId = wellnesses[8].WellnessId,
+            CreationDate = new DateTime(2026, 9, 15)
+        },
+        new UsersWellness
+        {
+            Id = test2.Id,
+            WellnessId = wellnesses[9].WellnessId,
+            CreationDate = new DateTime(2026, 9, 16)
+        }
+    };
 
             foreach (var t in templates)
             {
                 var exists = await context.UsersWellnesses.FirstOrDefaultAsync(u => u.Id == t.Id && u.WellnessId == t.WellnessId && u.CreationDate == t.CreationDate);
-                if (exists != null)
-                {
 
-                }
-                else
+                if (exists == null)
                 {
-                    await context.UsersWellnesses.AddAsync(t);
+                    context.UsersWellnesses.Add(t);
                 }
             }
+
             await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
         }
     }
 }

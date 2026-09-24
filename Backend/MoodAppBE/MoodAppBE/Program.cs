@@ -65,7 +65,16 @@ namespace MoodAppBE
 
             app.UseCors("Frontend");
 
-            await app.SeedData();
+            try
+            {
+                await app.SeedData();
+            }
+            catch (Exception ex)
+            {
+                var logger = app.Services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred during data seeding. The application will continue, but some data may be incomplete.");
+            }
+
             app.UseMiddleware<GlobalExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

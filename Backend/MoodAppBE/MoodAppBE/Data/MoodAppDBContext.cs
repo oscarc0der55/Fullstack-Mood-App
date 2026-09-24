@@ -21,17 +21,38 @@ namespace MoodAppBE.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure UsersMood entity
             modelBuilder.Entity<UsersMood>()
                 .HasKey(um => um.UsersMoodId);
 
-            modelBuilder.Entity<UsersWellness>().HasKey(uw => uw.UsersWellnessId);
+            modelBuilder.Entity<UsersMood>()
+                .Property(um => um.UsersMoodId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<UsersMood>()
+                .HasOne(um => um.User)
+                .WithMany()
+                .HasForeignKey(um => um.Id);
+
+            // Configure UsersWellness entity
+            modelBuilder.Entity<UsersWellness>()
+                .HasKey(uw => uw.UsersWellnessId);
+
+            modelBuilder.Entity<UsersWellness>()
+                .Property(uw => uw.UsersWellnessId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<UsersWellness>()
+                .HasOne(uw => uw.User)
+                .WithMany()
+                .HasForeignKey(uw => uw.Id);
 
             modelBuilder.Entity<IdentityRole<int>>().HasData(
                 new IdentityRole<int>
                 {
                     Id = 1,
-                    Name = "User1",
-                    NormalizedName = "USER123",
+                    Name = "OriginalUser",
+                    NormalizedName = "OGUSER123",
                     ConcurrencyStamp = ""
                 });
         }

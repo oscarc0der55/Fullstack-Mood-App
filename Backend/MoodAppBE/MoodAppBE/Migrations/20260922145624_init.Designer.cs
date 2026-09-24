@@ -12,7 +12,7 @@ using MoodAppBE.Data;
 namespace MoodAppBE.Migrations
 {
     [DbContext(typeof(MoodAppDBContext))]
-    [Migration("20260906151820_init")]
+    [Migration("20260922145624_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -59,8 +59,8 @@ namespace MoodAppBE.Migrations
                         {
                             Id = 1,
                             ConcurrencyStamp = "",
-                            Name = "User1",
-                            NormalizedName = "USER123"
+                            Name = "OriginalUser",
+                            NormalizedName = "OGUSER123"
                         });
                 });
 
@@ -175,16 +175,10 @@ namespace MoodAppBE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MoodId"));
 
-                    b.Property<string>("Activity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SleepQuality")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Troubles")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MoodId");
@@ -243,6 +237,9 @@ namespace MoodAppBE.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SeedPos")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -265,31 +262,88 @@ namespace MoodAppBE.Migrations
 
             modelBuilder.Entity("MoodAppBE.Models.UsersMood", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UsersMoodId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsersMoodId"));
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("MoodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsersMoodId")
-                        .HasColumnType("int");
+                    b.HasKey("UsersMoodId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("Id");
 
                     b.HasIndex("MoodId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("UsersMoods");
+                });
+
+            modelBuilder.Entity("MoodAppBE.Models.UsersWellness", b =>
+                {
+                    b.Property<int>("UsersWellnessId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsersWellnessId"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WellnessId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsersWellnessId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WellnessId");
+
+                    b.ToTable("UsersWellnesses");
+                });
+
+            modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
+                {
+                    b.Property<int>("WellnessId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WellnessId"));
+
+                    b.Property<string>("Activity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Food")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SleepQuality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WellnessId");
+
+                    b.ToTable("Wellnesses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -345,21 +399,48 @@ namespace MoodAppBE.Migrations
 
             modelBuilder.Entity("MoodAppBE.Models.UsersMood", b =>
                 {
+                    b.HasOne("MoodAppBE.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MoodAppBE.Models.Mood", "Mood")
                         .WithMany("UsersMoods")
                         .HasForeignKey("MoodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MoodAppBE.Models.User", "User")
+                    b.HasOne("MoodAppBE.Models.User", null)
                         .WithMany("UsersMoods")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Mood");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MoodAppBE.Models.UsersWellness", b =>
+                {
+                    b.HasOne("MoodAppBE.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MoodAppBE.Models.User", null)
+                        .WithMany("UsersWellnesses")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("MoodAppBE.Models.Wellness", "Wellness")
+                        .WithMany("UsersWellness")
+                        .HasForeignKey("WellnessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Wellness");
                 });
 
             modelBuilder.Entity("MoodAppBE.Models.Mood", b =>
@@ -370,6 +451,13 @@ namespace MoodAppBE.Migrations
             modelBuilder.Entity("MoodAppBE.Models.User", b =>
                 {
                     b.Navigation("UsersMoods");
+
+                    b.Navigation("UsersWellnesses");
+                });
+
+            modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
+                {
+                    b.Navigation("UsersWellness");
                 });
 #pragma warning restore 612, 618
         }

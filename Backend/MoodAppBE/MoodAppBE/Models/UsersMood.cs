@@ -7,7 +7,6 @@ namespace MoodAppBE.Models
     {
         public int UsersMoodId { get; set; }
 
-        [ForeignKey("User")]
         public int Id { get; set; }
         public User User { get; set; }
 
