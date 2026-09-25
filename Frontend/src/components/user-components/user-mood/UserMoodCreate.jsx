@@ -1,6 +1,7 @@
 import {useState, useContext} from 'react';
 import {MoodContext} from '../../../context/MoodContext';
 import {createMood} from '../../../connection/mood-connection/MoodConnection';
+import './UserMoodStyle.css';
 
 export default function UserMoodCreate() {
     const {status, setStatus} = useState('');
@@ -23,12 +24,16 @@ export default function UserMoodCreate() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div className="umc">
+            <div className="umc-container">
+        <form className="umc-form" onSubmit={handleSubmit}>
             <label htmlFor="status">Status:</label>
             <input type="number" min="1" max="10" value={status} onChange={(e) => setStatus(e.target.value)} required />
             <label htmlFor="troubles">Troubles:</label>
             <input type="text" value={troubles} onChange={(e) => setTroubles(e.target.value)} />
             <button type="submit">Create Mood</button>
             </form>
+            </div>
+            </div>
     )
 }

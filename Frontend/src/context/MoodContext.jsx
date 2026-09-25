@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {getMoods} from '../../../connection/mood-connection/MoodConnection';
+import {getMoods} from '../connection/mood-connection/MoodConnection';
 import {MoodContextObject} from './MoodContextObject';
 
 export function MoodProvider({children}) {
