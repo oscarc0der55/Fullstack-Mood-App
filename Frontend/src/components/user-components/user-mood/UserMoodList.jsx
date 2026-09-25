@@ -1,6 +1,7 @@
 import {deleteMood} from "../../../connection/mood-connection/MoodConnection";
 import MoodContext from "../../../context/MoodContext";
 import {useContext} from "react";
+import './UserMoodStyle.css';
 
 export default function UserMoodList(){
     const {getMoodList, moods} = useContext(MoodContext);
@@ -14,16 +15,18 @@ export default function UserMoodList(){
         }
     }
         return (
-            <>
-            <h1>List of Moods</h1>
-            <ul>          
-                {moods.map((mood) => (
-                    <li key={mood.moodId}>
-                        {mood.status} - {mood.troubles} 
-                        <button onClick={() => handleDeleteMood(mood.moodId)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </>
-    );
+            <div className="uml">
+                <div className="uml-container">
+                    <h1>List of Moods</h1>
+                    <ul className="uml-list">
+                        {moods.map((mood) => (
+                            <li key={mood.moodId}>
+                                {mood.status} - {mood.troubles} 
+                                <button onClick={() => handleDeleteMood(mood.moodId)}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        );
 }

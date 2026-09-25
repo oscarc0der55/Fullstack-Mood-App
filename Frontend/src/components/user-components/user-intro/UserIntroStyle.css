@@ -1,0 +1,9 @@
+.ui {
+    max-width: 100%;
+}
+
+.ui-container{
+    width: min(100%, 35rem);
+    margin: var(--spacing-8, 0.5rem) auto;
+    padding: var(--spacing-12, 0.75rem);
+}

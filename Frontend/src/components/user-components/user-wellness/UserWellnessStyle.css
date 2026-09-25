@@ -36,6 +36,11 @@
     border-radius: 0.25rem;
 }
 
+.uwl-list {
+    list-style-type: none;
+    padding: 0;
+}
+
 @media (min-width: 1025px) {
     .uwc-container{
         width: min(100%, 50rem);
