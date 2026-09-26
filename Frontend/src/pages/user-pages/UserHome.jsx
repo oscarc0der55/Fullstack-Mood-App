@@ -1,1 +1,9 @@
-//Homepage that welcomes the user and doesn't overwhelm them with info
+import UserIntro from "../components/user-components/user-intro/UserIntro";
+
+export default function UserHome() {
+    return (
+        <div>
+            <UserIntro />
+        </div>
+    );
+}

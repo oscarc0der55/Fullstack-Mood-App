@@ -14,6 +14,10 @@ export async function getCurrentUser() {
     return response.data;
 }
 
+export async function logoutFromCookie() {
+  await api.post('logout');
+}
+
 export async function checkAuth(){
     try {
         await api.get("manage/info")
