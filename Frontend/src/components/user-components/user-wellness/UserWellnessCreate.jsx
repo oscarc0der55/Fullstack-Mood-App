@@ -1,5 +1,5 @@
 import {useState, useContext} from 'react';
-import WellnessContext from '../../../context/WellnessContext';
+import {useWellness} from '../../../context/WellnessContext';
 import {createWellness} from '../../../connection/wellness-connection/WellnessConnection';
 import './UserWellnessStyle.css';
 
@@ -7,7 +7,7 @@ export default function UserWellnessCreate() {
     const {activity, setActivity} = useState('');
     const {food, setFood} = useState('');
     const {sleepQuality, setSleepQuality} = useState('');
-    const {getWellnessList} = useContext(WellnessContext);
+    const {getWellnessList} = useContext(useWellness);
 
     async function handleSubmit(e) {
         e.preventDefault();

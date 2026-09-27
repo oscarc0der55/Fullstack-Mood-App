@@ -1,12 +1,12 @@
 import {useState, useContext} from 'react';
-import {MoodContext} from '../../../context/MoodContext';
+import {useMood} from '../../../context/MoodContext';
 import {createMood} from '../../../connection/mood-connection/MoodConnection';
 import './UserMoodStyle.css';
 
 export default function UserMoodCreate() {
     const {status, setStatus} = useState('');
     const {troubles, setTroubles} = useState('');
-    const {getMoodList} = useContext(MoodContext);
+    const {getMoodList} = useContext(useMood);
 
     async function handleSubmit(e) {
         e.preventDefault();
