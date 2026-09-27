@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import { GlobalErrorContext } from "./GlobalErrorContext.js";
+import { GlobalErrorContextObject } from "./GlobalErrorContextObject.js";
 
 export const GlobalErrorProvider = ({children}) => {
     const [globalError, setGlobalError] = useState(sessionStorage.getItem('globalErrorMessage') || '');
@@ -23,8 +23,8 @@ export const GlobalErrorProvider = ({children}) => {
 
 
     return (
-        <GlobalErrorContext.Provider value={{ globalError, clearGlobalError, setGlobalError }}>
+        <GlobalErrorContextObject.Provider value={{ globalError, clearGlobalError, setGlobalError }}>
             {children}
-        </GlobalErrorContext.Provider>
+        </GlobalErrorContextObject.Provider>
     );
 }
