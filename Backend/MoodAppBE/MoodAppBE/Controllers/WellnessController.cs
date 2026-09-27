@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoodAppBE.Service.IService;
 using Microsoft.AspNetCore.Http;
@@ -18,16 +19,24 @@ namespace MoodAppBE.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("mine")]
+        public async Task<IActionResult> GetMyWellness()
+        {
+            var userId = GetCurrentUserId();
+            var wellness = await wellnessService.GetWellnessByUserIdAsync(userId);
+            return Ok(wellness);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all")]
         public async Task<ActionResult<List<WellnessDTO>>> GetAll()
         {
             var wellness = await wellnessService.GetWellnessAsync();
             return Ok(wellness);
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
-        [Route("{wellnessId:int}")]
+        [Authorize]
+        [HttpGet("{wellnessId:int}")]
         public async Task<ActionResult<WellnessDTO>> GetById(int wellnessId)
         {
             var wellness = await wellnessService.GetWellnessByIdAsync(wellnessId);
@@ -36,20 +45,44 @@ namespace MoodAppBE.Controllers
                 return NotFound();
             }
 
+            var currentUserId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && wellness.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             return Ok(wellness);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<WellnessDTO>> Create(CreateWellnessDTO newWellness)
         {
-            var createdWellness = await wellnessService.CreateWellnessAsync(newWellness);
+            var userId = GetCurrentUserId();
+            var createdWellness = await wellnessService.CreateWellnessAsync(userId, newWellness);
             return CreatedAtAction(nameof(GetById), new { wellnessId = createdWellness.WellnessId }, createdWellness);
         }
 
-        [HttpPut]
-        [Route("{wellnessId:int}")]
+        [Authorize]
+        [HttpPut("{wellnessId:int}")]
         public async Task<IActionResult> Update(int wellnessId, UpdateWellnessDTO wellness)
         {
+            var existingWellness = await wellnessService.GetWellnessByIdAsync(wellnessId);
+            if (existingWellness == null)
+            {
+                return NotFound();
+            }
+
+            var userId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && existingWellness.UserId != userId)
+            {
+                return Forbid();
+            }
+
             var update = await wellnessService.UpdateWellnessAsync(wellnessId, wellness);
 
             if (!update)
@@ -59,16 +92,42 @@ namespace MoodAppBE.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("{wellnessId:int}")]
+        [Authorize]
+        [HttpDelete("{wellnessId:int}")]
         public async Task<IActionResult> Delete(int wellnessId)
         {
+            var existingWellness = await wellnessService.GetWellnessByIdAsync(wellnessId);
+            if (existingWellness == null)
+            {
+                return NotFound();
+            }
+
+            var userId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && existingWellness.UserId != userId)
+            {
+                return Forbid();
+            }
+
             var delete = await wellnessService.DeleteWellnessAsync(wellnessId);
             if (!delete)
             {
                 return NotFound();
             }
             return NoContent();
+        }
+
+        private int GetCurrentUserId()
+        {
+            var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdValue, out var userId))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return userId;
         }
     }
 }

@@ -22,7 +22,25 @@ namespace MoodAppBE.Service
             {
                 MoodId = mood.MoodId,
                 Status = mood.Status,
-                Troubles = mood.Troubles
+                Troubles = mood.Troubles,
+                CreationDate = mood.CreationDate,
+                UserId = mood.UserId
+            }).ToList();
+
+            return moodDTO;
+        }
+
+        public async Task<List<MoodDTO>> GetMoodsByUserIdAsync(int userId)
+        {
+            var moods = await moodRepository.GetMoodsByUserIdAsync(userId);
+
+            var moodDTO = moods.Select(mood => new MoodDTO
+            {
+                MoodId = mood.MoodId,
+                Status = mood.Status,
+                Troubles = mood.Troubles,
+                CreationDate = mood.CreationDate,
+                UserId = mood.UserId
             }).ToList();
 
             return moodDTO;
@@ -40,27 +58,33 @@ namespace MoodAppBE.Service
             {
                 MoodId = mood.MoodId,
                 Status = mood.Status,
-                Troubles = mood.Troubles
+                Troubles = mood.Troubles,
+                CreationDate = mood.CreationDate,
+                UserId = mood.UserId
             };
 
             return moodDTO;
         }
 
-        public async Task<MoodDTO> CreateMoodAsync(CreateMoodDTO newMood)
+        public async Task<MoodDTO> CreateMoodAsync(int userId, CreateMoodDTO newMood)
         {
-
             var mood = new Mood
             {
                 Status = newMood.Status,
-                Troubles = newMood.Troubles
+                Troubles = newMood.Troubles,
+                UserId = userId,
+                CreationDate = DateTime.UtcNow
             };
 
             var createdMood = await moodRepository.CreateMoodAsync(mood);
 
             var moodDTO = new MoodDTO
             {
+                MoodId = createdMood.MoodId,
                 Status = createdMood.Status,
-                Troubles = createdMood.Troubles
+                Troubles = createdMood.Troubles,
+                CreationDate = createdMood.CreationDate,
+                UserId = createdMood.UserId
             };
 
             return moodDTO;
@@ -81,7 +105,7 @@ namespace MoodAppBE.Service
             return await moodRepository.UpdateMoodAsync(existingMood);
         }
 
-        public async Task<bool> DeleteMovieAsync(int moodId)
+        public async Task<bool> DeleteMoodAsync(int moodId)
         {
             return await moodRepository.DeleteMoodAsync(moodId);
         }

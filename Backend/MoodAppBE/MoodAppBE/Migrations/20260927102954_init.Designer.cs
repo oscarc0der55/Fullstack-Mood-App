@@ -12,7 +12,7 @@ using MoodAppBE.Data;
 namespace MoodAppBE.Migrations
 {
     [DbContext(typeof(MoodAppDBContext))]
-    [Migration("20260922145624_init")]
+    [Migration("20260927102954_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -175,13 +175,21 @@ namespace MoodAppBE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MoodId"));
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Troubles")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("MoodId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Moods");
                 });
@@ -260,68 +268,6 @@ namespace MoodAppBE.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MoodAppBE.Models.UsersMood", b =>
-                {
-                    b.Property<int>("UsersMoodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsersMoodId"));
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoodId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UsersMoodId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("MoodId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersMoods");
-                });
-
-            modelBuilder.Entity("MoodAppBE.Models.UsersWellness", b =>
-                {
-                    b.Property<int>("UsersWellnessId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsersWellnessId"));
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WellnessId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UsersWellnessId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WellnessId");
-
-                    b.ToTable("UsersWellnesses");
-                });
-
             modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
                 {
                     b.Property<int>("WellnessId")
@@ -334,6 +280,9 @@ namespace MoodAppBE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Food")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -341,7 +290,12 @@ namespace MoodAppBE.Migrations
                     b.Property<string>("SleepQuality")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("WellnessId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Wellnesses");
                 });
@@ -397,67 +351,26 @@ namespace MoodAppBE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MoodAppBE.Models.UsersMood", b =>
-                {
-                    b.HasOne("MoodAppBE.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoodAppBE.Models.Mood", "Mood")
-                        .WithMany("UsersMoods")
-                        .HasForeignKey("MoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoodAppBE.Models.User", null)
-                        .WithMany("UsersMoods")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Mood");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MoodAppBE.Models.UsersWellness", b =>
-                {
-                    b.HasOne("MoodAppBE.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoodAppBE.Models.User", null)
-                        .WithMany("UsersWellnesses")
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("MoodAppBE.Models.Wellness", "Wellness")
-                        .WithMany("UsersWellness")
-                        .HasForeignKey("WellnessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Wellness");
-                });
-
             modelBuilder.Entity("MoodAppBE.Models.Mood", b =>
                 {
-                    b.Navigation("UsersMoods");
-                });
+                    b.HasOne("MoodAppBE.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("MoodAppBE.Models.User", b =>
-                {
-                    b.Navigation("UsersMoods");
-
-                    b.Navigation("UsersWellnesses");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MoodAppBE.Models.Wellness", b =>
                 {
-                    b.Navigation("UsersWellness");
+                    b.HasOne("MoodAppBE.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

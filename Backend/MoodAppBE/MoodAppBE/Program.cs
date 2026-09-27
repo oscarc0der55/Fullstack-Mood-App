@@ -44,9 +44,6 @@ namespace MoodAppBE
             builder.Services.AddScoped<IMoodService, MoodService>();
             builder.Services.AddScoped<IWellnessRepository, WellnessRepository>();
             builder.Services.AddScoped<IWellnessService, WellnessService>();
-            builder.Services.AddScoped<IUserMoodRepository, UserMoodRepository>();
-            builder.Services.AddScoped<IUserMoodService, UserMoodService>();
-            builder.Services.AddScoped<IUserWellnessRepository, UserWellnessRepository>();
 
             builder.Services.AddAuthorization();
 

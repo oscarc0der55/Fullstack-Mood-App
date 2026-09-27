@@ -20,20 +20,29 @@ namespace MoodAppBE.Repository
             var moods = await context.Moods.AsNoTracking().ToListAsync();
             return moods;
         }
+
+        public async Task<List<Mood>> GetMoodsByUserIdAsync(int userId)
+        {
+            var moods = await context.Moods
+                .Where(m => m.UserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+            return moods;
+        }
+
         public async Task<Mood> GetMoodByIdAsync(int moodId)
         {
-            //Mood may be null, add error handling
             var mood = await context.Moods.FirstOrDefaultAsync(m => m.MoodId == moodId);
             return mood;
         }
+
         public async Task<Mood> CreateMoodAsync(Mood newMood)
         {
-            //Look how you did during CC
             context.Moods.Add(newMood);
             await context.SaveChangesAsync();
-
             return newMood;
         }
+
         public async Task<bool> UpdateMoodAsync(Mood mood)
         {
             context.Moods.Update(mood);
@@ -59,3 +68,4 @@ namespace MoodAppBE.Repository
         }
     }
 }
+

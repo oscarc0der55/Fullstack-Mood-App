@@ -14,38 +14,24 @@ namespace MoodAppBE.Data
 
         public DbSet<Mood> Moods { get; set; }
         public DbSet<Wellness> Wellnesses { get; set; }
-        public DbSet<UsersMood> UsersMoods { get; set; }
-        public DbSet<UsersWellness> UsersWellnesses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure UsersMood entity
-            modelBuilder.Entity<UsersMood>()
-                .HasKey(um => um.UsersMoodId);
-
-            modelBuilder.Entity<UsersMood>()
-                .Property(um => um.UsersMoodId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<UsersMood>()
-                .HasOne(um => um.User)
+            // Configure Mood entity
+            modelBuilder.Entity<Mood>()
+                .HasOne(m => m.User)
                 .WithMany()
-                .HasForeignKey(um => um.Id);
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure UsersWellness entity
-            modelBuilder.Entity<UsersWellness>()
-                .HasKey(uw => uw.UsersWellnessId);
-
-            modelBuilder.Entity<UsersWellness>()
-                .Property(uw => uw.UsersWellnessId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<UsersWellness>()
-                .HasOne(uw => uw.User)
+            // Configure Wellness entity
+            modelBuilder.Entity<Wellness>()
+                .HasOne(w => w.User)
                 .WithMany()
-                .HasForeignKey(uw => uw.Id);
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<IdentityRole<int>>().HasData(
                 new IdentityRole<int>

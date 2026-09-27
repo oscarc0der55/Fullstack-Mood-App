@@ -12,25 +12,35 @@ namespace MoodAppBE.Repository
         {
             context = _context;
         }
+
         public async Task<List<Wellness>> GetWellnessAsync()
         {
             var wells = await context.Wellnesses.AsNoTracking().ToListAsync();
             return wells;
         }
+
+        public async Task<List<Wellness>> GetWellnessByUserIdAsync(int userId)
+        {
+            var wells = await context.Wellnesses
+                .Where(w => w.UserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+            return wells;
+        }
+
         public async Task<Wellness> GetWellnessByIdAsync(int wellId)
         {
-            //Mood may be null, add error handling
             var wellness = await context.Wellnesses.FirstOrDefaultAsync(w => w.WellnessId == wellId);
             return wellness;
         }
+
         public async Task<Wellness> CreateWellnessAsync(Wellness newWell)
         {
-            //Look how you did during CC
             context.Wellnesses.Add(newWell);
             await context.SaveChangesAsync();
-
             return newWell;
         }
+
         public async Task<bool> UpdateWellnessAsync(Wellness well)
         {
             context.Wellnesses.Update(well);

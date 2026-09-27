@@ -119,357 +119,246 @@ namespace MoodAppBE.Service
 
             await SeedMood(context);
             await SeedWellness(context);
-            await SeedUserMoods(context);
-            await SeedUserWellness(context);
         }
 
         private static async Task SeedMood(MoodAppDBContext context)
         {
-            var templates = new List<Mood>()
-            {
-                new Mood
-                {
-                    Status = 6,
-                    Troubles = "Stressigt på jobbet"
-                },
-                new Mood
-                {
-                    Status = 8,
-                    Troubles = ""
-                },
-                 new Mood
-                {
-                    Status = 4,
-                    Troubles = "Hårda deadlines på jobbet"
-                },
-                  new Mood
-                {
-                    Status = 5,
-                    Troubles = "Fortfarande inte klar med deadlines"
-                },
-                   new Mood
-                {
-                    Status = 5,
-                    Troubles = "Klar men är mentalt utmattad"
-                },
-                   new Mood
-                {
-                    Status = 4,
-                    Troubles = "Många läxor"
-                },
-                new Mood
-                {
-                    Status = 5,
-                    Troubles = "Det är två prov imorgon"
-                },
-                 new Mood
-                {
-                    Status = 5,
-                    Troubles = "Vet inte om något gick bra"
-                },
-                  new Mood
-                {
-                    Status = 6,
-                    Troubles = "Hängde ut med mina kompisar"
-                },
-                   new Mood
-                {
-                    Status = 7,
-                    Troubles = "Lättad av allt gick bra"
-                }
-            };
+            var user1 = await context.Users
+                .FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
 
-            // Add moods to the context
-            foreach (var mood in templates)
-            {
-                var exists = await context.Moods.FirstOrDefaultAsync(m => m.Status == mood.Status && m.Troubles == mood.Troubles);
-                if (exists == null)
-                {
-                    await context.Moods.AddAsync(mood);
-                }
-            }
-
-            await context.SaveChangesAsync();
-        }
-
-        private static async Task<List<Wellness>> SeedWellness(MoodAppDBContext context)
-        {
-            var templates = new List<Wellness>()
-            {
-                new Wellness
-                {
-                    Activity = "Quick workout",
-                    Food = "Chicken",
-                    SleepQuality = ""
-                },
-                new Wellness
-                {
-                    Activity = "Quick workout",
-                    Food = "Meatballs",
-                    SleepQuality = "Good"
-                },
-                new Wellness
-                {
-                    Activity = "Rest",
-                    Food = "Hamburger",
-                    SleepQuality = ""
-                },
-                new Wellness
-                {
-                    Activity = "Gym class",
-                    Food = "Salmon",
-                    SleepQuality = ""
-                },
-                new Wellness
-                {
-                    Activity = "Studying",
-                    Food = "Soup",
-                    SleepQuality = "Bad"
-                },
-                new Wellness
-                {
-                    Activity = "Studying",
-                    Food = "Soup",
-                    SleepQuality = "Bad"
-                },
-                new Wellness
-                {
-                    Activity = "Meditation",
-                    Food = "Salad",
-                    SleepQuality = "Good"
-                },
-                new Wellness
-                {
-                    Activity = "Reading",
-                    Food = "Fish",
-                    SleepQuality = ""
-                },
-                new Wellness
-                {
-                    Activity = "Gaming",
-                    Food = "Pizza",
-                    SleepQuality = "Average"
-                },
-                new Wellness
-                {
-                    Activity = "Walking",
-                    Food = "Fruits",
-                    SleepQuality = "Good"
-                }
-            };
-
-            // Add wellnesses to the context
-            foreach (var t in templates)
-            {
-                var exists = await context.Wellnesses.FirstOrDefaultAsync(w => w.Activity == t.Activity && w.Food == t.Food && w.SleepQuality == t.SleepQuality);
-                if (exists == null)
-                {
-                    context.Wellnesses.Add(t);
-                }
-            }
-
-            await context.SaveChangesAsync();
-
-            var createdWell = new List<Wellness>();
-            foreach (var t in templates)
-            {
-                var w = await context.Wellnesses.FirstOrDefaultAsync(w => w.Activity == t.Activity && w.Food == t.Food && w.SleepQuality == t.SleepQuality);
-                if (w != null)
-                {
-                    createdWell.Add(w);
-                }
-            }
-            return createdWell;
-        }
-
-        private static async Task SeedUserMoods(MoodAppDBContext context)
-        {
-            var user1 = await context.Users.FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
-            var test2 = await context.Users.FirstOrDefaultAsync(t => t.Email == "test2@gmail.com");
+            var test2 = await context.Users
+                .FirstOrDefaultAsync(u => u.Email == "test2@gmail.com");
 
             if (user1 == null || test2 == null)
             {
-                throw new InvalidOperationException("Required users (user1@gmail.com, test2@gmail.com) were not found. Please ensure SeedUsers() has been called successfully.");
+                throw new InvalidOperationException(
+                    "Required users were not found.");
             }
 
-            var moods = await context.Moods.ToListAsync();
-
-            // Validate that we have enough moods seeded
-            if (moods.Count < 10)
-            {
-                throw new InvalidOperationException($"Expected at least 10 moods to be seeded, but found only {moods.Count}. Please ensure SeedMood() has been called successfully.");
-            }
-
-            var templates = new List<UsersMood>()
-            {
-                new UsersMood
-                {
-                    Id = user1.Id,
-                    MoodId = moods[0].MoodId,
-                    CreationDate = new DateTime(2026, 9, 7)
-                },
-                 new UsersMood
-                {
-                    Id = user1.Id,
-                    MoodId = moods[1].MoodId,
-                    CreationDate = new DateTime(2026, 9, 8)
-                },
-                new UsersMood
-                {
-                    Id = user1.Id,
-                    MoodId = moods[2].MoodId,
-                    CreationDate = new DateTime(2026, 9, 9)
-                },
-                new UsersMood
-                {
-                    Id = user1.Id,
-                    MoodId = moods[3].MoodId,
-                    CreationDate = new DateTime(2026, 9, 10)
-                },
-                new UsersMood
-                {
-                   Id = user1.Id,
-                   MoodId = moods[4].MoodId,
-                   CreationDate = new DateTime(2026, 9, 11)
-                },
-                new UsersMood
-                {
-                    Id = test2.Id,
-                    MoodId = moods[5].MoodId,
-                    CreationDate = new DateTime(2026, 9, 7)
-                },
-                new UsersMood
-                {
-                    Id = test2.Id,
-                    MoodId = moods[6].MoodId,
-                    CreationDate = new DateTime(2026, 9, 8)
-                },
-                new UsersMood
-                {
-                    Id = test2.Id,
-                    MoodId = moods[7].MoodId,
-                    CreationDate = new DateTime(2026, 9, 9)
-                },
-                new UsersMood
-                {
-                    Id = test2.Id,
-                    MoodId = moods[8].MoodId,
-                    CreationDate = new DateTime(2026, 9, 10)
-                },
-                new UsersMood
-                {
-                    Id = test2.Id,
-                    MoodId = moods[9].MoodId,
-                    CreationDate = new DateTime(2026, 9, 11)
-                }
-            };
-
-            foreach (var t in templates)
-            {
-                var exists = await context.UsersMoods.FirstOrDefaultAsync(u => u.Id == t.Id && u.MoodId == t.MoodId && u.CreationDate == t.CreationDate);
-
-                if (exists == null)
-                {
-                    context.UsersMoods.Add(t);
-                }
-            }
-
-            await context.SaveChangesAsync();
-            context.ChangeTracker.Clear();
-        }
-        private static async Task SeedUserWellness(MoodAppDBContext context)
-        {
-            var user1 = await context.Users.FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
-            var test2 = await context.Users.FirstOrDefaultAsync(t => t.Email == "test2@gmail.com");
-
-            if (user1 == null || test2 == null)
-            {
-                throw new InvalidOperationException("Required users (user1@gmail.com, test2@gmail.com) were not found. Please ensure SeedUsers() has been called successfully.");
-            }
-
-            var wellnesses = await context.Wellnesses.ToListAsync();
-
-            // Validate that we have enough wellnesses seeded
-            if (wellnesses.Count < 10)
-            {
-                throw new InvalidOperationException($"Expected at least 10 wellnesses to be seeded, but found only {wellnesses.Count}. Please ensure SeedWellness() has been called successfully.");
-            }
-
-            var templates = new List<UsersWellness>()
+            var templates = new List<Mood>
     {
-        new UsersWellness
+        new Mood
         {
-            Id = user1.Id,
-            WellnessId = wellnesses[0].WellnessId,
+            UserId = user1.Id,
+            Status = 6,
+            Troubles = "Stressigt på jobbet",
             CreationDate = new DateTime(2026, 9, 7)
         },
-        new UsersWellness
+        new Mood
         {
-            Id = user1.Id,
-            WellnessId = wellnesses[1].WellnessId,
+            UserId = user1.Id,
+            Status = 8,
+            Troubles = "",
             CreationDate = new DateTime(2026, 9, 8)
         },
-        new UsersWellness
+        new Mood
         {
-            Id = user1.Id,
-            WellnessId = wellnesses[2].WellnessId,
+            UserId = user1.Id,
+            Status = 4,
+            Troubles = "Hårda deadlines på jobbet",
             CreationDate = new DateTime(2026, 9, 9)
         },
-        new UsersWellness
+        new Mood
         {
-            Id = user1.Id,
-            WellnessId = wellnesses[3].WellnessId,
+            UserId = user1.Id,
+            Status = 5,
+            Troubles = "Fortfarande inte klar med deadlines",
             CreationDate = new DateTime(2026, 9, 10)
         },
-        new UsersWellness
+        new Mood
         {
-            Id = user1.Id,
-            WellnessId = wellnesses[4].WellnessId,
+            UserId = user1.Id,
+            Status = 5,
+            Troubles = "Klar men är mentalt utmattad",
             CreationDate = new DateTime(2026, 9, 11)
         },
-        new UsersWellness
+
+        new Mood
         {
-            Id = test2.Id,
-            WellnessId = wellnesses[5].WellnessId,
+            UserId = test2.Id,
+            Status = 4,
+            Troubles = "Många läxor",
+            CreationDate = new DateTime(2026, 9, 7)
+        },
+        new Mood
+        {
+            UserId = test2.Id,
+            Status = 5,
+            Troubles = "Det är två prov imorgon",
+            CreationDate = new DateTime(2026, 9, 8)
+        },
+        new Mood
+        {
+            UserId = test2.Id,
+            Status = 5,
+            Troubles = "Vet inte om något gick bra",
+            CreationDate = new DateTime(2026, 9, 9)
+        },
+        new Mood
+        {
+            UserId = test2.Id,
+            Status = 6,
+            Troubles = "Hängde ut med mina kompisar",
+            CreationDate = new DateTime(2026, 9, 10)
+        },
+        new Mood
+        {
+            UserId = test2.Id,
+            Status = 7,
+            Troubles = "Lättad av allt gick bra",
+            CreationDate = new DateTime(2026, 9, 11)
+        }
+    };
+
+            foreach (var mood in templates)
+            {
+                var exists = await context.Moods.FirstOrDefaultAsync(m =>
+                    m.UserId == mood.UserId &&
+                    m.Status == mood.Status &&
+                    m.Troubles == mood.Troubles &&
+                    m.CreationDate == mood.CreationDate);
+
+                if (exists == null)
+                {
+                    context.Moods.Add(mood);
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+
+        private static async Task SeedWellness(MoodAppDBContext context)
+        {
+            // Get the users that the seeded wellness entries belong to
+            var user1 = await context.Users
+                .FirstOrDefaultAsync(u => u.Email == "user1@gmail.com");
+
+            var test2 = await context.Users
+                .FirstOrDefaultAsync(u => u.Email == "test2@gmail.com");
+
+            // Make sure the users exist before creating wellness entries
+            if (user1 == null || test2 == null)
+            {
+                throw new InvalidOperationException(
+                    "Required users (user1@gmail.com, test2@gmail.com) were not found. " +
+                    "Please ensure SeedUsers() has been called successfully.");
+            }
+
+            var templates = new List<Wellness>
+    {
+        // User 1
+        new Wellness
+        {
+            UserId = user1.Id,
+            Activity = "Quick workout",
+            Food = "Chicken",
+            SleepQuality = "",
+            CreationDate = new DateTime(2026, 9, 7)
+        },
+
+        new Wellness
+        {
+            UserId = user1.Id,
+            Activity = "Quick workout",
+            Food = "Meatballs",
+            SleepQuality = "Good",
+            CreationDate = new DateTime(2026, 9, 8)
+        },
+
+        new Wellness
+        {
+            UserId = user1.Id,
+            Activity = "Rest",
+            Food = "Hamburger",
+            SleepQuality = "",
+            CreationDate = new DateTime(2026, 9, 9)
+        },
+
+        new Wellness
+        {
+            UserId = user1.Id,
+            Activity = "Gym class",
+            Food = "Salmon",
+            SleepQuality = "",
+            CreationDate = new DateTime(2026, 9, 10)
+        },
+
+        new Wellness
+        {
+            UserId = user1.Id,
+            Activity = "Studying",
+            Food = "Soup",
+            SleepQuality = "Bad",
+            CreationDate = new DateTime(2026, 9, 11)
+        },
+
+        // User 2
+        new Wellness
+        {
+            UserId = test2.Id,
+            Activity = "Studying",
+            Food = "Soup",
+            SleepQuality = "Bad",
             CreationDate = new DateTime(2026, 9, 12)
         },
-        new UsersWellness
+
+        new Wellness
         {
-            Id = test2.Id,
-            WellnessId = wellnesses[6].WellnessId,
+            UserId = test2.Id,
+            Activity = "Meditation",
+            Food = "Salad",
+            SleepQuality = "Good",
             CreationDate = new DateTime(2026, 9, 13)
         },
-        new UsersWellness
+
+        new Wellness
         {
-            Id = test2.Id,
-            WellnessId = wellnesses[7].WellnessId,
+            UserId = test2.Id,
+            Activity = "Reading",
+            Food = "Fish",
+            SleepQuality = "",
             CreationDate = new DateTime(2026, 9, 14)
         },
-        new UsersWellness
+
+        new Wellness
         {
-            Id = test2.Id,
-            WellnessId = wellnesses[8].WellnessId,
+            UserId = test2.Id,
+            Activity = "Gaming",
+            Food = "Pizza",
+            SleepQuality = "Average",
             CreationDate = new DateTime(2026, 9, 15)
         },
-        new UsersWellness
+
+        new Wellness
         {
-            Id = test2.Id,
-            WellnessId = wellnesses[9].WellnessId,
+            UserId = test2.Id,
+            Activity = "Walking",
+            Food = "Fruits",
+            SleepQuality = "Good",
             CreationDate = new DateTime(2026, 9, 16)
         }
     };
 
-            foreach (var t in templates)
+            // Add each wellness entry if it doesn't already exist
+            foreach (var wellness in templates)
             {
-                var exists = await context.UsersWellnesses.FirstOrDefaultAsync(u => u.Id == t.Id && u.WellnessId == t.WellnessId && u.CreationDate == t.CreationDate);
+                var exists = await context.Wellnesses
+                    .FirstOrDefaultAsync(w =>
+                        w.UserId == wellness.UserId &&
+                        w.Activity == wellness.Activity &&
+                        w.Food == wellness.Food &&
+                        w.SleepQuality == wellness.SleepQuality &&
+                        w.CreationDate == wellness.CreationDate);
 
                 if (exists == null)
                 {
-                    context.UsersWellnesses.Add(t);
+                    context.Wellnesses.Add(wellness);
                 }
             }
 
             await context.SaveChangesAsync();
+
             context.ChangeTracker.Clear();
         }
     }

@@ -55,35 +55,6 @@ namespace MoodAppBE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Moods",
-                columns: table => new
-                {
-                    MoodId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Troubles = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Moods", x => x.MoodId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Wellnesses",
-                columns: table => new
-                {
-                    WellnessId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Activity = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Food = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SleepQuality = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wellnesses", x => x.WellnessId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -190,68 +161,47 @@ namespace MoodAppBE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UsersMoods",
+                name: "Moods",
                 columns: table => new
                 {
-                    UsersMoodId = table.Column<int>(type: "int", nullable: false)
+                    MoodId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    MoodId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Troubles = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersMoods", x => x.UsersMoodId);
+                    table.PrimaryKey("PK_Moods", x => x.MoodId);
                     table.ForeignKey(
-                        name: "FK_UsersMoods_AspNetUsers_Id",
-                        column: x => x.Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UsersMoods_AspNetUsers_UserId",
+                        name: "FK_Moods_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UsersMoods_Moods_MoodId",
-                        column: x => x.MoodId,
-                        principalTable: "Moods",
-                        principalColumn: "MoodId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UsersWellnesses",
+                name: "Wellnesses",
                 columns: table => new
                 {
-                    UsersWellnessId = table.Column<int>(type: "int", nullable: false)
+                    WellnessId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    WellnessId = table.Column<int>(type: "int", nullable: false),
+                    Activity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Food = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SleepQuality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersWellnesses", x => x.UsersWellnessId);
+                    table.PrimaryKey("PK_Wellnesses", x => x.WellnessId);
                     table.ForeignKey(
-                        name: "FK_UsersWellnesses_AspNetUsers_Id",
-                        column: x => x.Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UsersWellnesses_AspNetUsers_UserId",
+                        name: "FK_Wellnesses_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UsersWellnesses_Wellnesses_WellnessId",
-                        column: x => x.WellnessId,
-                        principalTable: "Wellnesses",
-                        principalColumn: "WellnessId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -300,34 +250,14 @@ namespace MoodAppBE.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UsersMoods_Id",
-                table: "UsersMoods",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersMoods_MoodId",
-                table: "UsersMoods",
-                column: "MoodId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersMoods_UserId",
-                table: "UsersMoods",
+                name: "IX_Moods_UserId",
+                table: "Moods",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UsersWellnesses_Id",
-                table: "UsersWellnesses",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersWellnesses_UserId",
-                table: "UsersWellnesses",
+                name: "IX_Wellnesses_UserId",
+                table: "Wellnesses",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersWellnesses_WellnessId",
-                table: "UsersWellnesses",
-                column: "WellnessId");
         }
 
         /// <inheritdoc />
@@ -349,22 +279,16 @@ namespace MoodAppBE.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UsersMoods");
+                name: "Moods");
 
             migrationBuilder.DropTable(
-                name: "UsersWellnesses");
+                name: "Wellnesses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Moods");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Wellnesses");
         }
     }
 }

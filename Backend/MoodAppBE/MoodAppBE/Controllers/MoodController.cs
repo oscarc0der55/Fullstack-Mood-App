@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoodAppBE.Service.IService;
 using Microsoft.AspNetCore.Http;
@@ -11,23 +12,31 @@ namespace MoodAppBE.Controllers
     public class MoodController : ControllerBase
     {
         private readonly IMoodService moodService;
+
         public MoodController(IMoodService _moodService)
         {
             moodService = _moodService;
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<ActionResult<List<MoodDTO>>> GetAll()
+        [HttpGet("mine")]
+        public async Task<IActionResult> GetMyMoods()
         {
-            var moods = await moodService.GetMoodsAsync();
-
+            var userId = GetCurrentUserId();
+            var moods = await moodService.GetMoodsByUserIdAsync(userId);
             return Ok(moods);
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet]
-        [Route("{moodId:int}")]
+        [HttpGet("all")]
+        public async Task<ActionResult<List<MoodDTO>>> GetAll()
+        {
+            var moods = await moodService.GetMoodsAsync();
+            return Ok(moods);
+        }
+
+        [Authorize]
+        [HttpGet("{moodId:int}")]
         public async Task<ActionResult<MoodDTO>> GetById(int moodId)
         {
             var mood = await moodService.GetMoodByIdAsync(moodId);
@@ -36,21 +45,45 @@ namespace MoodAppBE.Controllers
                 return NotFound();
             }
 
+            var currentUserId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && mood.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             return Ok(mood);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MoodDTO>> Create(CreateMoodDTO newMood)
         {
-            var createdMood = await moodService.CreateMoodAsync(newMood);
+            var userId = GetCurrentUserId();
+            var createdMood = await moodService.CreateMoodAsync(userId, newMood);
             return CreatedAtAction(nameof(GetById), new { moodId = createdMood.MoodId }, createdMood);
         }
-        [HttpPut]
-        [Route("{moodId:int}")]
+
+        [Authorize]
+        [HttpPut("{moodId:int}")]
         public async Task<IActionResult> Update(int moodId, UpdateMoodDTO mood)
         {
-            var update = await moodService.UpdateMoodAsync(moodId, mood);
+            var existingMood = await moodService.GetMoodByIdAsync(moodId);
+            if (existingMood == null)
+            {
+                return NotFound();
+            }
 
+            var userId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && existingMood.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            var update = await moodService.UpdateMoodAsync(moodId, mood);
             if (!update)
             {
                 return NotFound();
@@ -58,11 +91,25 @@ namespace MoodAppBE.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("{moodId:int}")]
+        [Authorize]
+        [HttpDelete("{moodId:int}")]
         public async Task<IActionResult> Delete(int moodId)
         {
-            var delete = await moodService.DeleteMovieAsync(moodId);
+            var existingMood = await moodService.GetMoodByIdAsync(moodId);
+            if (existingMood == null)
+            {
+                return NotFound();
+            }
+
+            var userId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && existingMood.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            var delete = await moodService.DeleteMoodAsync(moodId);
             if (!delete)
             {
                 return NotFound();
@@ -70,6 +117,16 @@ namespace MoodAppBE.Controllers
             return NoContent();
         }
 
+        private int GetCurrentUserId()
+        {
+            var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            if (!int.TryParse(userIdValue, out var userId))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return userId;
+        }
     }
 }
