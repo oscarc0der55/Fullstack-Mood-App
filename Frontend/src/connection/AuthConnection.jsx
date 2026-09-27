@@ -5,8 +5,6 @@ const api = axios.create({
     withCredentials: true,
 });
 
-console.log('API URL:', import.meta.env.VITE_API_BASE_URL);
-
 export async function loginWithCookie(email, password) {
     await api.post('/login?useCookies=true', {
         email,
