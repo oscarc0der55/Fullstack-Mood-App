@@ -18,7 +18,7 @@ export async function getCurrentUser() {
 }
 
 export async function logoutFromCookie() {
-    await api.post('/logout');
+    api.post('/api/auth/logout');
 }
 
 export async function checkAuth() {
