@@ -12,9 +12,9 @@
 }
 
 .uwl-container{
-    width: min(100%, 35rem);
-    margin: var(--spacing-8, 0.5rem) auto;
-    padding: var(--spacing-12, 0.75rem);
+    width: min(100%, 72rem);
+    margin: 1.5rem auto 3rem;
+    padding: 0 1.5rem;
 }
 
 .uwc-form{
@@ -37,8 +37,172 @@
 }
 
 .uwl-list {
-    list-style-type: none;
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 0;
     padding: 0;
+    list-style: none;
+}
+
+.wellness-dashboard {
+    --wellness-ink: #263b3a;
+    --wellness-muted: #66716d;
+    --wellness-line: #dce3dd;
+    color: var(--wellness-ink);
+}
+
+.wellness-dashboard__header,
+.wellness-dashboard__section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.wellness-dashboard__header h1,
+.wellness-dashboard__section-heading h2 {
+    margin: 0;
+    letter-spacing: 0;
+}
+
+.wellness-dashboard__header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.wellness-dashboard__intro,
+.wellness-dashboard__eyebrow {
+    margin: 0;
+}
+
+.wellness-dashboard__intro {
+    margin-top: 0.5rem;
+    color: var(--wellness-muted);
+}
+
+.wellness-dashboard__eyebrow {
+    margin-bottom: 0.35rem;
+    color: #14766d;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.wellness-dashboard__count {
+    color: var(--wellness-muted);
+    font-size: 0.88rem;
+}
+
+.wellness-dashboard__metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.wellness-metric {
+    display: grid;
+    min-height: 7.5rem;
+    align-content: space-between;
+    gap: 0.6rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--wellness-line);
+    border-top: 4px solid;
+    background: #fff;
+}
+
+.wellness-metric--teal { border-top-color: #14766d; }
+.wellness-metric--gold { border-top-color: #d5a63c; }
+.wellness-metric--coral { border-top-color: #cc654f; }
+
+.wellness-metric__label {
+    color: var(--wellness-muted);
+    font-size: 0.86rem;
+}
+
+.wellness-metric strong {
+    font-size: 1.7rem;
+    line-height: 1.15;
+}
+
+.wellness-metric__activity { overflow-wrap: anywhere; }
+.wellness-metric__date { font-size: 1rem !important; }
+
+.wellness-history {
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--wellness-line);
+}
+
+.wellness-dashboard__section-heading h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.55rem;
+    font-weight: 500;
+}
+
+.wellness-entry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--wellness-line);
+    background: #fff;
+}
+
+.wellness-entry__topline {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+}
+
+.wellness-entry__topline time {
+    color: var(--wellness-muted);
+    font-size: 0.82rem;
+}
+
+.wellness-entry__details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin: 0.75rem 0 0;
+}
+
+.wellness-entry__details dt {
+    color: var(--wellness-muted);
+    font-size: 0.75rem;
+}
+
+.wellness-entry__details dd {
+    margin: 0.15rem 0 0;
+    overflow-wrap: anywhere;
+}
+
+.wellness-entry__delete {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid #d6a9a1;
+    background: #fff;
+    color: #984735;
+    cursor: pointer;
+}
+
+.wellness-entry__delete:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.wellness-dashboard__message {
+    display: block;
+    margin: 1rem 0 0;
+    padding: 1rem;
+    border-left: 3px solid #14766d;
+    background: #edf4ef;
+    color: var(--wellness-ink);
+}
+
+.wellness-dashboard__message--error {
+    border-left-color: #b64e3c;
+    background: #fbefec;
 }
 
 @media (min-width: 1025px) {
@@ -46,7 +210,14 @@
         width: min(100%, 50rem);
     }
 
-    .uwl-container{
-        width: min(100%, 50rem);
-    }   
+}
+
+@media (max-width: 600px) {
+    .uwl-container { padding: 0 1rem; }
+    .wellness-dashboard__header h1 { font-size: 2rem; }
+    .wellness-dashboard__metrics { grid-template-columns: 1fr; }
+    .wellness-metric { min-height: 6rem; }
+    .wellness-entry { grid-template-columns: 1fr; }
+    .wellness-entry__delete { justify-self: start; }
+    .wellness-dashboard__count { align-self: flex-start; }
 }

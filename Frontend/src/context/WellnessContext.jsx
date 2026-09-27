@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {getWellness} from '../connection/WellnessConnection';
+import {getWellness} from '../connection/wellness-connection/WellnessConnection';
 import {WellnessContextObject} from './WellnessContextObject';
 
 export function WellnessProvider({children}) {
