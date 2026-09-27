@@ -58,6 +58,9 @@ a {
 --color-border-white: #dcdcdc;
 --color-offwhite: #FCFCFC;
 --color-error: #C0544A;
+--color-ink: #263b3a;
+--color-muted: #66716d;
+--color-line: #dce3dd;
 
   /* Spacing, used for margins, paddings and gaps */
   --spacing-2: 0.125rem;

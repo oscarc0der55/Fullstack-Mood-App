@@ -1,54 +1,51 @@
-.umc{
+.umc {
     max-width: 100%;
 }
+
 .uml {
     max-width: 100%;
 }
 
-.umc-container{
+.umc-container {
     width: min(100%, 35rem);
-    margin: var(--spacing-8, 0.5rem) auto;
-    padding: var(--spacing-12, 0.75rem);
+    margin: 0.5rem auto;
+    padding: 0.75rem;
+    border: 1px solid var(--color-line);
 }
 
-.uml-container{
-    width: min(100%, 72rem);
+.uml-container {
+    width: min(100%, 35rem);
     margin: 1.5rem auto 3rem;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
 }
 
-.umc-form{
+.umc-form {
     display: flex;
+    flex-direction: column;
     width: 100%;
     gap: 1rem;
-    padding: var(--spacing-4, 0.25rem);
+    padding: 0.25rem;
 }
 
 .umc-form > label {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-4, 0.25rem);
+    gap: 0.25rem;
 }
 
 .umc-form > input {
-    padding: var(--spacing-4, 0.25rem);
-    border: 1px solid var(--color-lightgrey, #CDC9C9);
+    padding: 0.5rem;
+    border: 1px solid var(--color-lightgrey, #cdc9c9);
     border-radius: 0.25rem;
 }
 
-.uml-list {
-    display: grid;
-    gap: 0.65rem;
-    margin: 1rem 0 0;
-    padding: 0;
-    list-style: none;
-}
+/* =========================
+   Dashboard
+========================= */
 
 .mood-dashboard {
-    --mood-ink: #263b3a;
-    --mood-muted: #66716d;
-    --mood-line: #dce3dd;
-    color: var(--mood-ink);
+
+    color: var(--color-ink);
 }
 
 .mood-dashboard__header,
@@ -67,7 +64,7 @@
 
 .mood-dashboard__header h1 {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 500;
 }
 
@@ -83,7 +80,7 @@
 
 .mood-dashboard__eyebrow {
     margin-bottom: 0.35rem;
-    color: #14766d;
+    color: var(--color-teal);
     font-size: 0.72rem;
     font-weight: 700;
 }
@@ -94,66 +91,72 @@
     font-size: 0.88rem;
 }
 
+/* =========================
+   Overview
+========================= */
+
 .mood-dashboard__overview {
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     gap: 1rem;
     margin: 1.5rem 0;
 }
 
 .mood-dashboard__metrics {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem;
-    margin: 0;
-}
-
-.mood-trend {
-    flex: 1;
-    min-width: 0;
-    padding: 1.4rem;
-    border: 1px solid var(--mood-line);
-    background: #fff;
 }
 
 .mood-metric {
     display: grid;
-    min-height: 7.5rem;
+    min-height: 6rem;
     align-content: space-between;
     gap: 0.6rem;
-    padding: 1.1rem 1.2rem;
-    border: 1px solid var(--mood-line);
+    padding: 1rem;
+    border: 1px solid var(--color-line);
     border-top: 4px solid;
     background: #fff;
 }
 
-.mood-metric--coral { border-top-color: #cc654f; }
-.mood-metric--teal { border-top-color: #14766d; }
-.mood-metric--gold { border-top-color: #d5a63c; }
+.mood-metric--coral {
+    border-top-color: #cc654f;
+}
+
+.mood-metric--teal {
+    border-top-color: #14766d;
+}
+
+.mood-metric--gold {
+    border-top-color: #d5a63c;
+}
 
 .mood-metric__label {
-    color: var(--mood-muted);
+    color: var(--color-muted);
     font-size: 0.86rem;
 }
 
-.mood-metric strong {
+.mood-metric__value {
     font-size: 1.7rem;
     line-height: 1.15;
+    font-weight: 600;
 }
 
-.mood-metric strong small {
-    color: var(--mood-muted);
-    font-size: 0.95rem;
-    font-weight: 500;
+.mood-metric__date {
+    font-size: 1rem;
+    line-height: 1.15;
+    font-weight: 600;
 }
 
-.mood-metric__date { font-size: 1rem !important; }
+/* =========================
+   Mood trend
+========================= */
 
-.mood-trend,
-.mood-history {
-    padding: 1.4rem 0;
-    border-top: 1px solid var(--mood-line);
+.mood-trend {
+    min-width: 0;
+    padding: 1.4rem;
+    border: 1px solid var(--color-line);
+    background: #fff;
 }
 
 .mood-dashboard__section-heading h2 {
@@ -179,7 +182,7 @@
     grid-template-rows: auto 1fr auto;
     justify-items: center;
     gap: 0.4rem;
-    color: var(--mood-muted);
+    color: var(--color-muted);
     font-size: 0.75rem;
 }
 
@@ -195,25 +198,50 @@
     font-weight: 700;
 }
 
+.mood-trend__date {
+    white-space: nowrap;
+}
+
+/* =========================
+   Mood history
+========================= */
+
+.mood-history {
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--color-line);
+}
+
+.mood-history__list {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
 .mood-entry {
     display: grid;
-    grid-template-columns: 3.25rem minmax(0, 1fr) auto;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
     padding: 1rem;
-    border: 1px solid var(--mood-line);
+    border: 1px solid var(--color-line);
     background: #fff;
 }
 
 .mood-entry__score {
     display: grid;
-    width: 3rem;
+    width: 2.5rem;
     aspect-ratio: 1;
     place-items: center;
     background: #e0eee6;
-    color: #14594f;
+    color: var(--color-teal);
     font-size: 1.2rem;
     font-weight: 700;
+}
+
+.mood-entry__content {
+    min-width: 0;
 }
 
 .mood-entry__topline {
@@ -223,32 +251,29 @@
     gap: 0.25rem 1rem;
 }
 
+.mood-entry__title {
+    font-weight: 600;
+}
+
 .mood-entry__topline time {
-    color: var(--mood-muted);
+    color: var(--color-muted);
     font-size: 0.82rem;
 }
 
 .mood-entry__content p {
     margin: 0.4rem 0 0;
-    color: var(--mood-muted);
+    color: var(--color-muted);
     overflow-wrap: anywhere;
 }
 
-.mood-entry__delete {
-    padding: 0.5rem 0.65rem;
-    border: 1px solid #d6a9a1;
-    background: #fff;
-    color: #984735;
-    cursor: pointer;
-}
-
-.mood-entry__delete:disabled {
-    cursor: wait;
-    opacity: 0.65;
-}
+/* =========================
+   Entry actions
+========================= */
 
 .mood-entry__actions {
     display: flex;
+    grid-column: 2;
+    flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
 }
@@ -257,6 +282,8 @@
 .mood-entry__save,
 .mood-entry__cancel,
 .mood-entry__delete {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid transparent;
     cursor: pointer;
 }
 
@@ -275,6 +302,24 @@
     color: white;
 }
 
+.mood-entry__delete {
+    border-color: #d6a9a1;
+    background: #fff;
+    color: #984735;
+}
+
+.mood-entry__delete:disabled,
+.mood-entry__edit:disabled,
+.mood-entry__save:disabled,
+.mood-entry__cancel:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* =========================
+   Edit fields
+========================= */
+
 .mood-entry__edit-fields {
     display: flex;
     flex-direction: column;
@@ -288,6 +333,15 @@
     gap: 0.25rem;
 }
 
+.mood-entry__edit-fields input {
+    padding: 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.25rem;
+}
+
+/* =========================
+   Messages
+========================= */
 
 .mood-dashboard__message {
     display: block;
@@ -295,7 +349,7 @@
     padding: 1rem;
     border-left: 3px solid #14766d;
     background: #edf4ef;
-    color: var(--mood-ink);
+    color: var(--color-ink);
 }
 
 .mood-dashboard__message--error {
@@ -304,14 +358,91 @@
 }
 
 @media (min-width: 1025px) {
-    .umc-container{
-    width: min(100%, 50rem);
-    .mood-dashboard__header h1 { font-size: 2rem; }
-    .mood-dashboard__metrics { grid-template-columns: 1fr; }
-    .mood-metric { min-height: 6rem; }
-    .mood-entry { grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.75rem; }
-    .mood-entry__score { width: 2.5rem; }
-    .mood-entry__delete { grid-column: 2; justify-self: start; }
-    .mood-dashboard__count { align-self: flex-start; }
+    .umc-container {
+        width: min(100%, 50rem);
+    }
+
+    .uml-container {
+        padding: 0 1.5rem;
+    }
+
+    .mood-dashboard__header h1 {
+        font-size: 2.5rem;
+    }
+
+    .mood-dashboard__overview {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .mood-dashboard__metrics {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .mood-trend {
+        flex: 1;
+    }
+    .mood-entry {
+        grid-template-columns: 3.25rem minmax(0, 1fr) auto;
+        gap: 1rem;
+    }
+
+    .mood-entry__score {
+        width: 3rem;
+    }
+
+    .mood-entry__actions {
+        grid-column: auto;
+        flex-wrap: nowrap;
+    }
+}
+
+@media (max-width: 600px) {
+    .uml-container {
+        padding: 0 0.75rem;
+    }
+
+    .mood-dashboard__header {
+        align-items: flex-start;
+    }
+
+    .mood-dashboard__header h1 {
+        font-size: 1.8rem;
+    }
+
+    .mood-dashboard__section-heading {
+        align-items: flex-start;
+    }
+
+    .mood-dashboard__count {
+        align-self: flex-start;
+    }
+
+    .mood-trend {
+        padding: 1rem;
+    }
+
+    .mood-trend__bars {
+        gap: 0.25rem;
+    }
+
+    .mood-entry {
+        grid-template-columns: 2.5rem minmax(0, 1fr);
+    }
+
+    .mood-entry__score {
+        width: 2.5rem;
+    }
+
+    .mood-entry__topline {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .mood-entry__actions {
+        grid-column: 1 / -1;
     }
 }

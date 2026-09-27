@@ -9,8 +9,11 @@ export default function UserIntro() {
         <div className="ui-container">
             <h1>Welcome to Mood App</h1>
             <p>Here you can track your mood and wellness over time. Use the navigation menu to access different features of the app.</p>
-            <button onClick={() => navigate('/user-statistic')}>
-                See your stats
+            <button onClick={() => navigate('/user-mood')}>
+                See your mood
+            </button>
+            <button onClick={() => navigate('/user-wellness')}>
+                See your activities
             </button>
         </div>
         </div>
