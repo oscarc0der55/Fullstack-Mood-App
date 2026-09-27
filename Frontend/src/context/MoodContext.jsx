@@ -1,9 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getMoods } from '../connection/mood-connection/MoodConnection';
 import { MoodContextObject } from './MoodContextObject';
 
-export function useMood({ children }) {
+export function MoodProvider({ children }) {
     const [moods, setMoods] = useState([]);
+
+    const getMoodList = useCallback(async () => {
+        try {
+            const moodList = await getMoods();
+            setMoods(moodList);
+        } catch (error) {
+            console.error('Error fetching moods:', error);
+        }
+    }, []);
 
     useEffect(() => {
         let active = true;
@@ -12,12 +21,10 @@ export function useMood({ children }) {
             try {
                 const moodList = await getMoods();
 
-                if (!active) return;
-
-                setMoods(Array.isArray(moodList) ? moodList : []);
+                if (active) {
+                    setMoods(moodList);
+                }
             } catch (error) {
-                if (!active) return;
-
                 console.error('Error fetching moods:', error);
             }
         }
@@ -31,7 +38,11 @@ export function useMood({ children }) {
 
     return (
         <MoodContextObject.Provider
-            value={{ moods, setMoods }}
+            value={{
+                moods,
+                setMoods,
+                getMoodList,
+            }}
         >
             {children}
         </MoodContextObject.Provider>

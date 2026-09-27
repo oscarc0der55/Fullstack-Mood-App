@@ -30,10 +30,10 @@ namespace MoodAppBE
 
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.ConfigureApplicationCookie(option =>
+                builder.Services.ConfigureApplicationCookie(options =>
                 {
-                    option.Cookie.SameSite = SameSiteMode.None;
-                    option.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 });
             }
             builder.Services.AddControllers();

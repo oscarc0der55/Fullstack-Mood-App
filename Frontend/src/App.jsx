@@ -17,9 +17,9 @@ function App() {
       <Route path="/admin-home" element={<AdminRoute><AdminHome /></AdminRoute>} />
 
       {/* User Routes */}
-      <Route path="/user-home" element={<ProtectedRoute role="User" component={UserHome} />} />
-      <Route path="/user-profile" element={<ProtectedRoute role="User" component={UserProfile} />} />
-      <Route path="/user-statistic" element={<ProtectedRoute role="User" component={UserStatistic} />} />
+      <Route path="/user-home" element={<ProtectedRoute role="User"><UserHome /></ProtectedRoute>} />
+      <Route path="/user-profile" element={<ProtectedRoute role="User"><UserProfile /></ProtectedRoute>} />
+      <Route path="/user-statistic" element={<ProtectedRoute role="User"><UserStatistic /></ProtectedRoute>} />
     </Routes>
   )
 }

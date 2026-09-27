@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getWellness } from '../connection/wellness-connection/WellnessConnection';
 import { WellnessContextObject } from './WellnessContextObject';
 
-export function useWellness({ children }) {
+export function WellnessProvider({ children }) {
     const [wellness, setWellness] = useState([]);
 
     useEffect(() => {
