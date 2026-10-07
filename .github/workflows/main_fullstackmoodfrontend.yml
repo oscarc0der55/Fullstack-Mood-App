@@ -33,6 +33,17 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+          
+      - name: Check production build
+        working-directory: ./Frontend
+        run: |
+            echo "Checking production build for localhost..."
+            if grep -R "localhost:7098" dist; then
+              echo "ERROR: localhost:7098 found in production build!"
+              exit 1
+            else
+              echo "SUCCESS: localhost:7098 not found in production build."
+              fi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
