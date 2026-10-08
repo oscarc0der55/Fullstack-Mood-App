@@ -1,14 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - MoodAppBackend
+name: Build and deploy ASP.Net Core app to Azure Web App - MoodAppbackend
 
 on:
   push:
     branches:
       - 'main'
-    paths:
-      - ./Backend/MoodAppBE
   workflow_dispatch:
 
 jobs:
@@ -26,11 +24,9 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Build with dotnet
-        working-directory: ./Backend/MoodAppBE
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        working-directory: ./Backend/MoodAppBE
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
@@ -55,15 +51,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CEE2D2DD57DE4B35B26ADBE945845A9D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C925F64F410A49799CF713917C13B094 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_80C684C4894A45E4BCB255C2CE3EE4CA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0C7FA7B9F7CB4CDD9AFA2D5DF57F26A5 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BB02638E07A24A318A93837891CA4A7B }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_60A248055AEB4DD18E50F4CED96A334A }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'MoodAppBackend'
+          app-name: 'MoodAppbackend'
           slot-name: 'Production'
           package: .
           
